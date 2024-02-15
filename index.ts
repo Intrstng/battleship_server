@@ -15,21 +15,33 @@ export type WebSocketWithId = WebSocket & {
     id: string;
 };
 
-console.log(`Start static http server on the ${HTTP_PORT} port.`);
+export interface Message {
+    type: string;
+    data: string;
+    id: number;
+}
+
+console.log(`Run static HTTP server on PORT: ${HTTP_PORT}`);
 httpServer.listen(HTTP_PORT);
-console.log('WS server starts');
+console.log(`Run WebSocket server on PORT: ${WSS_PORT}`);
 
 export const wss = new WebSocketServer({port: WSS_PORT});
 
 wss.on('connection', (ws: WebSocketWithId) => {
+    console.log('Client connected to WebSocket server');
     ws.on('error', console.error);
-    ws.on('message', (message: string) => {
+    ws.on('message', (rawData: string) => {
+        const message = JSON.parse(rawData.toString()) as Message;
+        const { type, data } = message;
+        console.log(`Received action: ${type}. With data: ${data}`);
+        handleInput(type, data, ws);
     });
 });
 
 process.on('SIGINT', () => {
     wss.clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
+            console.log('Client disconnected from WebSocket server');
             client.close();
         }
     });
