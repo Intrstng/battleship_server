@@ -1,5 +1,6 @@
 import {users, User} from '../data/data';
 import {WebSocketWithId} from '../../index';
+import {Commands} from '../types/types';
 
 export const getUser = (name: string): User | undefined =>
     users.find((user) => user.name === name);
@@ -20,7 +21,7 @@ export const successRegistrationResponse = (name: string, errMsg: string, ws: We
     ws.id = name;
     ws.send(
         JSON.stringify({
-            type: 'reg',
+            type: Commands.Registration,
             data: JSON.stringify({
                 name: name,
                 index: getUser(name)?.index,
@@ -35,7 +36,7 @@ export const unsuccessfulRegistrationResponse = (name: string, errMsg: string, w
     ws.id = '';
     ws.send(
         JSON.stringify({
-            type: 'reg',
+            type: Commands.Registration,
             data: JSON.stringify({
                 name: '',
                 id: '',

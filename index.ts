@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import {v4} from 'uuid/index';
 import {commands, handleInput} from './src/utils/commands';
 import {WebSocket} from 'ws';
+import {Commands} from './src/types/types';
 dotenv.config();
 
 const HTTP_PORT = parseInt(process.env.HTTP_PORT || '8181');
@@ -16,7 +17,7 @@ export type WebSocketWithId = WebSocket & {
 };
 
 export interface Message {
-    type: string;
+    type: Commands;
     data: string;
     id: number;
 }

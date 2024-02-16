@@ -1,45 +1,26 @@
 import {WebSocketWithId} from '../../index';
 import {registerUser} from '../handlers/registerHandler';
+import {createGameRoom} from '../handlers/roomHandler';
+import {Commands} from '../types/types';
 
-export type CommandsType = Map<string, (type: string, data: string, ws: WebSocketWithId) => void>
+export type CommandsType = Map<string, (type: Commands, data: string, ws: WebSocketWithId) => void>
 
 export const commands: CommandsType = new Map(
     [
-        ['reg', (type, data, ws) => {
-            registerUser(type, data, ws);
-        }],
-        ['create_room', (msg, ws) => {
-            console.log('create_room')
-        }],
-        ['add_user_to_room', (msg, ws) => {
-            console.log('add_user_to_room')
-        }],
-        ['add_ships', (msg, ws) => {
-            console.log('add_ships')
-        }],
-        ['attack', (msg, ws) => {
-            console.log('attack')
-        }],
-
-        ['randomAttack', (msg, ws) => {
-            console.log('randomAttack')
-        }],
-
-        ['single_play', (msg, ws) => {
-            console.log('single_play')
-        }],
-        ['turn', (msg, ws) => {
-            console.log('turn')
-        }],
-        ['finish', (msg, ws) => {
-            console.log('finish')
-        }],
-
+        [Commands.Registration, (type, data, ws) => registerUser(type, data, ws)],
+        [Commands.CreateRoom, (type, data, ws) => createGameRoom(ws)],
+        [Commands.AddUserToRoom, (msg, ws) => console.log('add_user_to_room')],
+        [Commands.AddShips, (msg, ws) => console.log('add_ships')],
+        [Commands.Attack, (msg, ws) => console.log('attack')],
+        [Commands.RandomAttack, (msg, ws) => console.log('randomAttack')],
+        [Commands.SinglePlay, (msg, ws) => console.log('single_play')],
+        [Commands.Turn, (msg, ws) => console.log('turn')],
+        [Commands.Finish, (msg, ws) => console.log('finish')],
     ]
 )
 
 
-export const handleInput = async(type: string, data: string, ws: WebSocketWithId) => {
+export const handleInput = async(type: Commands, data: string, ws: WebSocketWithId) => {
     if (!type) return;
     const handler = commands.get(type);
     try {
