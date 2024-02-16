@@ -14,6 +14,7 @@ export enum StatusCode {
 export enum Commands {
     Registration = 'reg',
     CreateRoom = 'create_room',
+    CreateGame = 'create_game',
     AddUserToRoom = 'add_user_to_room',
     AddShips = 'add_ships',
     Attack = 'attack',
@@ -37,10 +38,6 @@ export type RoomData = {
     roomId: number,
     roomUsers: WebSocketWithId[],
 }
-
-
-
-
 
 
 export const sendGameRoomResponse = (type: Commands, data: string, ws: WebSocketWithId | WebSocket) => {

@@ -1,22 +1,22 @@
 import {WebSocketWithId, wss} from '../../index';
 import {getUser} from '../utils/userAccount';
 import {WebSocket} from 'ws';
-import {rooms, RoomsType} from '../data/data';
+import {Room, rooms, RoomsType} from '../data/data';
 import {Commands, RoomData, sendGameRoomResponse} from '../types/types';
-
 
 
 export const getAllGameRooms = (ws: WebSocketWithId) => {
     if (rooms.size > 0) {
-        const roomsArray: RoomData[] = [];
-        rooms.forEach((value, key) => {
-            const room = {
-                roomId: key,
-                roomUsers: value.users,
+        const allAvailableRooms: RoomData[] = [];
+        rooms.forEach((room, roomId) => {
+            const roomData = {
+                roomId,
+                roomUsers: room.users,
             }
-            roomsArray.push(room);
+            allAvailableRooms.push(roomData);
         });
-        sendGameRoomResponse(Commands.CreateRoom, JSON.stringify(roomsArray), ws);
+        sendGameRoomResponse(Commands.UpdateRoom, JSON.stringify(allAvailableRooms), ws);
+        //sendGameRoomResponse(Commands.CreateRoom, JSON.stringify(allAvailableRooms), ws);
     }
 };
 
@@ -44,11 +44,30 @@ export const addRoom = (ws: WebSocketWithId): RoomsType => {
 };
 
 export const createGameRoom = (ws: WebSocketWithId) => {
-    const roomData = addRoom(ws)
-
+    const roomData = addRoom(ws);
     wss.clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
             sendGameRoomResponse(Commands.UpdateRoom, JSON.stringify([roomData]), client);
         }
     });
 }
+
+export const addUsersToRoom = (data: string, ws: WebSocketWithId) => {
+    const idxRoom = JSON.parse(data).indexRoom;
+    const adminOfRoom = rooms.get(idxRoom).users[0];
+    if (adminOfRoom.id !== ws.id) {
+        const room = {
+            id: idxRoom,
+            users: [adminOfRoom, ws]
+        };
+        rooms.set(idxRoom, room);
+    }
+    const currentPlayers = rooms.get(idxRoom).users;
+    currentPlayers.forEach((user: WebSocketWithId) => {
+        const player = {
+            idGame: idxRoom,
+            idPlayer: getUser(user.id).index,
+        }
+        sendGameRoomResponse(Commands.CreateGame, JSON.stringify(player), user)
+    });
+};

@@ -12,7 +12,7 @@ export const registerUser = (type: Commands, message: string, ws: WebSocketWithI
     } else {
         if (isRegistered(name, password)) {
             unsuccessfulRegistrationResponse(name, 'A user with this login and password is already registered', ws);
-            getAllGameRooms(ws);
+            //getAllGameRooms(ws);
         } else {
             unsuccessfulRegistrationResponse(name, 'Sorry, that username already exists', ws);
         }
