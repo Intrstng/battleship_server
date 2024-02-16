@@ -35,8 +35,8 @@ export type ResponseDataType = {
 
 
 export type RoomData = {
-    roomId: number,
-    roomUsers: WebSocketWithId[],
+    roomId: number
+    roomUsers: WebSocketWithId[]
 }
 
 
@@ -48,3 +48,24 @@ export const sendGameRoomResponse = (type: Commands, data: string, ws: WebSocket
     });
     ws.send(response);
 }
+
+
+
+enum ShipSizes {
+    Small = 'small',
+    Medium = 'medium',
+    Large = 'large',
+    Huge = 'huge'
+}
+
+export type Ship = {
+    type?: ShipSizes.Small
+           | ShipSizes.Medium
+           | ShipSizes.Large
+           | ShipSizes.Huge
+    length: number
+    hitCapacity?: number
+    direction: boolean
+    position: { x: number; y: number }
+};
+

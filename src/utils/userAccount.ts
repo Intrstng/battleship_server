@@ -7,8 +7,9 @@ export const getUser = (name: string): User | undefined =>
 
 export const addNewUser = (name: string, password: string, ws: WebSocketWithId) => {
     if (getUser(name)) return;
+    const id = users.length + 1;
     const user = {
-        index: users.length + 1,
+        index: id,
         name,
         password,
         victories: 0

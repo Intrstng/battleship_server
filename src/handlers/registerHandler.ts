@@ -4,8 +4,8 @@ import {getAllGameRooms} from './roomHandler';
 import {Commands} from '../types/types';
 
 
-export const registerUser = (type: Commands, message: string, ws: WebSocketWithId) => {
-    const { name, password } = JSON.parse(message);
+export const registerUser = (type: Commands, data: string, ws: WebSocketWithId) => {
+    const { name, password } = JSON.parse(data);
     if (!getUser(name)) {
         addNewUser(name, password, ws);
         getAllGameRooms(ws);

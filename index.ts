@@ -14,7 +14,6 @@ const WSS_PORT = parseInt(process.env.WSS_PORT || '3000');
 
 export type WebSocketWithId = WebSocket & {
     id: string
-    roomId: number
 };
 
 export interface Message {
