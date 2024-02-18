@@ -1,6 +1,7 @@
 import {WebSocketWithId} from '../../index';
-import {game, playersShips} from '../data/data';
+import {game, playersShips, shipsBoard} from '../data/data';
 import {initGameplay} from '../utils/gameplay';
+import {buildShipsBoard} from '../utils/buildShipBoard';
 
 export const addShips = (data: string, ws: WebSocketWithId) => {
     const { indexPlayer, gameId, ships } = JSON.parse(data);
@@ -11,7 +12,8 @@ export const addShips = (data: string, ws: WebSocketWithId) => {
         idxOfActivePlayer: 0,
     });
 
-    const shipsWithHitCapacity = [...ships];
-    playersShips.set(ws.id, shipsWithHitCapacity);
+    const shipsBoardArray = [...ships];
+    playersShips.set(ws.id, shipsBoardArray);
+    shipsBoard.set(ws.id, buildShipsBoard(ws.id, shipsBoardArray));
     initGameplay(gameId, indexPlayer, ws);
 }

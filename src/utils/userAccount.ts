@@ -1,6 +1,6 @@
-import {users, User} from '../data/data';
+import {users} from '../data/data';
 import {WebSocketWithId} from '../../index';
-import {Commands} from '../types/types';
+import {Commands, User} from '../types/types';
 
 export const getUser = (name: string): User | undefined =>
     users.find((user) => user.name === name);
@@ -15,6 +15,7 @@ export const addNewUser = (name: string, password: string, ws: WebSocketWithId) 
         victories: 0
     };
     users.push(user);
+    ws.madeAttacks = new Set();
     successRegistrationResponse(name, '', ws);
 };
 

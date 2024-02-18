@@ -4,6 +4,8 @@ import {createGameRoom} from '../handlers/roomHandler';
 import {Commands} from '../types/types';
 import {addUsersToRoom} from '../handlers/newUserHandler';
 import {addShips} from '../handlers/shipsHandler';
+import {makeAttack} from '../handlers/attackHandler';
+import {randomAttackHandler} from '../handlers/randomAttackHandler';
 
 export type CommandsType = Map<string, (type: Commands, data: string, ws: WebSocketWithId) => void>
 
@@ -13,8 +15,8 @@ export const commands: CommandsType = new Map(
         [Commands.CreateRoom, (type, data, ws) => createGameRoom(ws)],
         [Commands.AddUserToRoom, (type, data, ws) => addUsersToRoom(data, ws)],
         [Commands.AddShips, (type, data, ws) => addShips(data, ws)],
-        [Commands.Attack, (msg, ws) => console.log('attack')],
-        [Commands.RandomAttack, (msg, ws) => console.log('randomAttack')],
+        [Commands.Attack, (type, data, ws) => makeAttack(type, data, ws)],
+        [Commands.RandomAttack, (type, data, ws) => randomAttackHandler(type, data, ws)],
         [Commands.SinglePlay, (msg, ws) => console.log('single_play')],
         [Commands.Turn, (msg, ws) => console.log('turn')],
         [Commands.Finish, (msg, ws) => console.log('finish')],

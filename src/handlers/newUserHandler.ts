@@ -1,11 +1,12 @@
 import {WebSocketWithId} from '../../index';
 import {rooms} from '../data/data';
 import {getUser} from '../utils/userAccount';
-import {Commands, sendGameRoomResponse} from '../types/types';
+import {Commands} from '../types/types';
+import {sendGameRoomResponse} from '../utils/responses';
 
 export const addUsersToRoom = (data: string, ws: WebSocketWithId) => {
     const idxRoom = JSON.parse(data).indexRoom;
-    const adminOfRoom = rooms.get(idxRoom).users[0];
+    const adminOfRoom = rooms.get(idxRoom)?.users[0];
     if (adminOfRoom.id !== ws.id) {
         const room = {
             id: idxRoom,

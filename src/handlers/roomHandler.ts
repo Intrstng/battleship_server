@@ -1,8 +1,9 @@
 import {WebSocketWithId, wss} from '../../index';
 import {getUser} from '../utils/userAccount';
 import {WebSocket} from 'ws';
-import {Room, rooms, RoomsType} from '../data/data';
-import {Commands, RoomData, sendGameRoomResponse} from '../types/types';
+import {rooms} from '../data/data';
+import {Commands, RoomData, RoomsType} from '../types/types';
+import {sendGameRoomResponse} from '../utils/responses';
 
 
 export const getAllGameRooms = (ws: WebSocketWithId) => {
@@ -25,7 +26,7 @@ export const addRoom = (ws: WebSocketWithId): RoomsType => {
         name: getUser(ws.id)?.name,
         index: getUser(ws.id)?.index,
     }
-    const id = rooms.size + 1;
+    const id = rooms.size + 1; // Date.now();
     const newRoom = {
         roomId: id,
         roomUsers: [user]

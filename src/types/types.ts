@@ -1,5 +1,5 @@
-import {WebSocketWithId} from '../../index';
 import {WebSocket} from 'ws';
+import {WebSocketWithId} from '../../index';
 
 export enum StatusCode {
     HTTP_Error = 0,
@@ -27,29 +27,43 @@ export enum Commands {
     UpdateWinners = 'update_winners'
 }
 
+export type User = {
+    index: number;
+    name: string;
+    password: string;
+    victories: number;
+};
+
+export type Room = {
+    id: number;
+    users: WebSocketWithId[];
+};
+
+export type RoomUser = {
+    name: string | undefined
+    index: number | undefined
+}
+
+export type RoomsType = {
+    roomId: number
+    roomUsers: RoomUser[]
+}
+
+export type GameParamsType = {
+    gameCounter: number;
+    idxOfActivePlayer: number;
+};
+
 export type ResponseDataType = {
     type: Commands
     data: string
     id: number
 }
 
-
 export type RoomData = {
     roomId: number
     roomUsers: WebSocketWithId[]
 }
-
-
-export const sendGameRoomResponse = (type: Commands, data: string, ws: WebSocketWithId | WebSocket) => {
-    const response = JSON.stringify({
-        type,
-        data,
-        id: 0,
-    });
-    ws.send(response);
-}
-
-
 
 enum ShipSizes {
     Small = 'small',
@@ -60,12 +74,37 @@ enum ShipSizes {
 
 export type Ship = {
     type?: ShipSizes.Small
-           | ShipSizes.Medium
-           | ShipSizes.Large
-           | ShipSizes.Huge
+         | ShipSizes.Medium
+         | ShipSizes.Large
+         | ShipSizes.Huge
     length: number
     hitCapacity?: number
     direction: boolean
     position: { x: number; y: number }
 };
 
+export enum Attack {
+    Miss = 'miss',
+    Killed = 'killed',
+    Shot = 'shot'
+}
+
+export type AttackType = Attack.Miss
+                       | Attack.Killed
+                       | Attack.Shot;
+
+
+export type WinsType = {
+    name: string;
+    wins: number;
+};
+
+
+export type AttackResponseType = {
+    position: {
+        x: number
+        y: number
+    }
+    currentPlayer: number
+    status: AttackType
+}

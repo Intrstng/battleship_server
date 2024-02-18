@@ -1,6 +1,7 @@
 import {game, playersShips, rooms} from '../data/data';
-import {Commands, sendGameRoomResponse} from '../types/types';
+import {Commands} from '../types/types';
 import {WebSocketWithId} from '../../index';
+import {sendGameRoomResponse} from './responses';
 
 export const initGameplay = (gameID: number, playerIdx: number, ws: WebSocketWithId) => {
     // Wait for connection of second player

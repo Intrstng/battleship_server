@@ -1,9 +1,7 @@
 import {httpServer} from './src/http_server';
 import {WebSocketServer} from "ws";
 import dotenv from 'dotenv';
-import crypto from 'node:crypto';
-import {v4} from 'uuid/index';
-import {commands, handleInput} from './src/utils/commands';
+import {handleInput} from './src/utils/commands';
 import {WebSocket} from 'ws';
 import {Commands} from './src/types/types';
 dotenv.config();
@@ -11,16 +9,17 @@ dotenv.config();
 const HTTP_PORT = parseInt(process.env.HTTP_PORT || '8181');
 const WSS_PORT = parseInt(process.env.WSS_PORT || '3000');
 
-
-export type WebSocketWithId = WebSocket & {
-    id: string
-};
-
 export interface Message {
     type: Commands;
     data: string;
     id: number;
 }
+
+export type WebSocketWithId = WebSocket & {
+    id: string
+    madeAttacks: Set<string>
+};
+
 
 console.log(`Run static HTTP server on PORT: ${HTTP_PORT}`);
 httpServer.listen(HTTP_PORT);
@@ -37,7 +36,13 @@ wss.on('connection', (ws: WebSocketWithId) => {
         console.log(`Received action: ${type}. With data: ${data}`);
         handleInput(type, data, ws);
     });
+
+    // ws.on('close', (code: number, reason: string) => {
+    //     console.log(`Client left WebSocket server. Close code: ${code}`);
+    //     ws.close();
+    // });
 });
+
 
 process.on('SIGINT', () => {
     wss.clients.forEach((client: WebSocket) => {
