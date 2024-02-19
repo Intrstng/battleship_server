@@ -4,6 +4,9 @@
     "description": "Template for the WebSocket remote control task",
     "main": "index.ts",
     "type": "commonjs",
+    "engines": {
+        "node": ">=20.0.0"
+    },
     "scripts": {
         "start": "ts-node ./index.ts",
         "start:dev": "nodemon ./index.ts"
@@ -15,7 +18,9 @@
         "@types/node": "^20.11.17",
         "@types/uuid": "^9.0.8",
         "@types/ws": "^8.5.10",
+        "dotenv": "^16.4.4",
         "nodemon": "^2.0.16",
+        "ts-dotenv": "^0.9.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3"
     },
