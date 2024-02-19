@@ -2,6 +2,7 @@ import {WebSocketCustom} from '../../index';
 import {game, playersShips, shipsBoard} from '../data/data';
 import {initGameplay} from '../utils/gameplay';
 import {buildShipsBoard} from '../utils/buildShipBoard';
+import {Ship} from '../types/types';
 
 export const addShips = (data: string, ws: WebSocketCustom) => {
     console.log(data);
@@ -12,9 +13,15 @@ export const addShips = (data: string, ws: WebSocketCustom) => {
         gameCounter: count,
         idxOfActivePlayer: 0,
     });
-
     const shipsBoardArray = [...ships];
-    playersShips.set(ws.id, shipsBoardArray);
     shipsBoard.set(ws.id, buildShipsBoard(ws.id, shipsBoardArray));
+
+    const shipsBoardArrayWithHitsHistory = ships.map((ship: Ship) => {
+        return {
+            ...ship,
+            hitCapacity: ship.length,
+        };
+    });
+    playersShips.set(ws.id, shipsBoardArrayWithHitsHistory);
     initGameplay(gameId, indexPlayer, ws);
 }

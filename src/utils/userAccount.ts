@@ -1,6 +1,6 @@
 import {users} from '../data/data';
 import {WebSocketCustom} from '../../index';
-import {Commands, User} from '../types/types';
+import {User} from '../types/types';
 import {successRegistrationResponse} from './responses';
 
 export const getUser = (name: string): User | undefined =>

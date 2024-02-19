@@ -21,7 +21,6 @@ export const startGameVsPC = async (ws: WebSocketCustom) => {
     const madeAttacksByPC: Set<string> = new Set();
     const randomShipIdx = randomInteger(0,ShipCollection.length - 1);
     const ships: Ship[] = JSON.parse(ShipCollection[randomShipIdx]).ships;
-    const shipsBoardArray = [...ships];
 
     wsOfAllUsersInRoom.push(ws);
 
@@ -37,7 +36,14 @@ export const startGameVsPC = async (ws: WebSocketCustom) => {
         gameCounter: 1,
         idxOfActivePlayer: getUser(ws.id)?.index || 0
     });
-    playersShips.set(ENEMY_PC, shipsBoardArray);
+
+    const shipsBoardArrayWithHitsHistory = ships.map((ship: Ship) => {
+        return {
+            ...ship,
+            hitCapacity: ship.length,
+        };
+    });
+    playersShips.set(ENEMY_PC, shipsBoardArrayWithHitsHistory);
 
     sendGameResponse(Commands.CreateGame, JSON.stringify({
         idGame: id,
@@ -59,7 +65,7 @@ export const startGameVsPC = async (ws: WebSocketCustom) => {
         JSON.stringify({
             type: Commands.StartGame,
             data: JSON.stringify({
-                ships: shipsBoardArray,
+                ships: shipsBoardArrayWithHitsHistory,
                 currentPlayerIndex: getUser(ENEMY_PC)?.index,
             }),
             id: 0,

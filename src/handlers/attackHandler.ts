@@ -58,6 +58,7 @@ export const makeAttack = (type: Commands, data: string, ws: WebSocketCustom) =>
                 }), user);
             });
         }
+
         // Check the winner or loser (Also when the enemy leaves the room he loses)
         if (enemy && enemy.readyState === WebSocket.CLOSED
             || isLoser(playersShips.get(enemy.id.toString()))) {
@@ -91,7 +92,7 @@ export const makeAttack = (type: Commands, data: string, ws: WebSocketCustom) =>
             });
         }
     }
-    // Game vs PC (the attack of PC)
+    // Game vs PC - single player (the attack of PC)
     if (ws.id === ENEMY_PC && indexPlayer === game.get(gameId)?.idxOfActivePlayer) {
         const botPC_ID = rooms.get(1).users[1].id;
         const status: AttackType | undefined = targetHitCheck(enemy, playersShips.get(ws.id) as Ship[], x, y, indexPlayer, ws);
@@ -206,12 +207,10 @@ export const targetHitCheck = (enemy: WebSocketCustom, ships: Ship[], x: number,
             }
             case ('L'): {
                 shipsBoard.get(enemyID)[y][x] = 'K';
-                // ................. //
                 break;
             }
             case ('H'): {
                 shipsBoard.get(enemyID)[y][x] = 'K';
-                // ................. //
                 break;
             }
         }
@@ -254,9 +253,7 @@ export function makeResponsePool(x: number, y: number, indexPlayer: number, pool
     poolArr.push(response);
 }
 
-export const isLoser = (
-    playersShipsCollection: Ship[] | undefined,
-): boolean => playersShipsCollection && playersShipsCollection.every((ship) => ship.hitCapacity === 0);
+export const isLoser = (playersShipsCollection: Ship[] | undefined): boolean => playersShipsCollection && playersShipsCollection.every((ship) => ship.hitCapacity === 0);
 
 
 export const countVictories = (name: string): void => {

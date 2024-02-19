@@ -1,7 +1,6 @@
 import {GameParamsType, Room, Ship, User} from '../types/types';
 
-
-// Inmemory DB with player data (login and password) storage
+// In memory DB with player data (login and password) storage
 export const users: User[] = [];
 export const rooms: Map<number, Room> = new Map();
 export const game: Map<number, GameParamsType> = new Map();

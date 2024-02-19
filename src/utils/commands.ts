@@ -6,8 +6,8 @@ import {addUsersToRoom} from '../handlers/newUserHandler';
 import {addShips} from '../handlers/shipsHandler';
 import {makeAttack} from '../handlers/attackHandler';
 import {randomAttackHandler} from '../handlers/randomAttackHandler';
-import {handleFinish} from '../handlers/finishHandler';
 import {startGameVsPC} from '../bot/botHandler';
+import {manageFinish} from '../handlers/finishHandler';
 
 export type CommandsType = Map<string, (type: Commands, data: string, ws: WebSocketCustom) => void>
 
@@ -20,7 +20,7 @@ export const commands: CommandsType = new Map(
         [Commands.Attack, (type, data, ws) => makeAttack(type, data, ws)],
         [Commands.RandomAttack, (type, data, ws) => randomAttackHandler(type, data, ws)],
         [Commands.SinglePlay, (type, data, ws) => startGameVsPC(ws)],
-        [Commands.Finish, (type, data, ws) => handleFinish(type, data, ws)],
+        [Commands.Finish, (type, data, ws) => manageFinish(type, data, ws)],
     ]
 )
 
