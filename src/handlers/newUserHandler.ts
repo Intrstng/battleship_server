@@ -5,6 +5,7 @@ import {Commands} from '../types/types';
 import {sendGameResponse} from '../utils/responses';
 
 export const addUsersToRoom = (data: string, ws: WebSocketCustom) => {
+    console.log(data);
     const idxRoom = JSON.parse(data).indexRoom;
     const adminOfRoom = rooms.get(idxRoom)?.users[0];
     if (adminOfRoom.id !== ws.id) {

@@ -4,6 +4,7 @@ import {initGameplay} from '../utils/gameplay';
 import {buildShipsBoard} from '../utils/buildShipBoard';
 
 export const addShips = (data: string, ws: WebSocketCustom) => {
+    console.log(data);
     const { indexPlayer, gameId, ships } = JSON.parse(data);
     let count: number | undefined = game.get(gameId)?.gameCounter;
     count ? count++ : count = 1;

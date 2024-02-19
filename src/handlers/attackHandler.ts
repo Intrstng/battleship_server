@@ -24,6 +24,7 @@ export const isThisAttackAlreadyDone = (x: number, y: number, set: Set<string>):
 
 
 export const makeAttack = (type: Commands, data: string, ws: WebSocketCustom) => {
+    console.log(type, data);
     const {x, y, gameId, indexPlayer} = JSON.parse(data);
     const players = rooms.get(gameId)?.users;
     const enemy: WebSocketCustom = players && players.filter((player) => player.id !== ws.id)[0];
@@ -153,7 +154,7 @@ export const makeAttack = (type: Commands, data: string, ws: WebSocketCustom) =>
 
 export const targetHitCheck = (enemy: WebSocketCustom, ships: Ship[], x: number, y: number, indexPlayer: number, ws: WebSocketCustom): AttackType | undefined => {
     const isGameVsPC = rooms.get(1).users[0].isGameVsPC;
-    const botPC_ID = rooms.get(1).users[1].id;
+    const botPC_ID = isGameVsPC && rooms.get(1).users[1].id;
     const enemyID: string = isGameVsPC ? botPC_ID : enemy.id;
     let poolS: AttackResponseType[] = [];
     // let poolM: AttackResponseType[] = [];

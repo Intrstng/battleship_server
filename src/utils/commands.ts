@@ -20,7 +20,6 @@ export const commands: CommandsType = new Map(
         [Commands.Attack, (type, data, ws) => makeAttack(type, data, ws)],
         [Commands.RandomAttack, (type, data, ws) => randomAttackHandler(type, data, ws)],
         [Commands.SinglePlay, (type, data, ws) => startGameVsPC(ws)],
-        [Commands.Turn, (type, data, ws) => console.log('turn')],
         [Commands.Finish, (type, data, ws) => handleFinish(type, data, ws)],
     ]
 )

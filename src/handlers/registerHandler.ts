@@ -6,6 +6,7 @@ import {unsuccessfulRegistrationResponse} from '../utils/responses';
 
 
 export const registerUser = (type: Commands, data: string, ws: WebSocketCustom) => {
+    console.log(type, data);
     const { name, password } = JSON.parse(data);
     if (!getUser(name)) {
         addNewUser(name, password, ws);

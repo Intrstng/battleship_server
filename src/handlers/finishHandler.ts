@@ -22,6 +22,7 @@ import {sendGameResponse} from '../utils/responses';
 
 
 export const handleFinish = (type: Commands, data: string, ws: WebSocketCustom) => {
+    console.log(type, data,'!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     ws.send(
         JSON.stringify({
             type: 'finish',
