@@ -1,12 +1,12 @@
-import {WebSocketWithId, wss} from '../../index';
+import {WebSocketCustom, wss} from '../../index';
 import {getUser} from '../utils/userAccount';
 import {WebSocket} from 'ws';
 import {rooms} from '../data/data';
 import {Commands, RoomData, RoomsType} from '../types/types';
-import {sendGameRoomResponse} from '../utils/responses';
+import {sendGameResponse} from '../utils/responses';
 
 
-export const getAllGameRooms = (ws: WebSocketWithId) => {
+export const getAllGameRooms = (ws: WebSocketCustom) => {
     if (rooms.size > 0) {
         const allAvailableRooms: RoomData[] = [];
         rooms.forEach((room, roomId) => {
@@ -16,23 +16,25 @@ export const getAllGameRooms = (ws: WebSocketWithId) => {
             }
             allAvailableRooms.push(roomData);
         });
-        sendGameRoomResponse(Commands.UpdateRoom, JSON.stringify(allAvailableRooms), ws);
-        //sendGameRoomResponse(Commands.CreateRoom, JSON.stringify(allAvailableRooms), ws);
+        sendGameResponse(Commands.UpdateRoom, JSON.stringify(allAvailableRooms), ws);
+        //sendGameResponse(Commands.CreateRoom, JSON.stringify(allAvailableRooms), ws);
     }
 };
 
-export const addRoom = (ws: WebSocketWithId): RoomsType => {
+export const addRoom = (ws: WebSocketCustom): RoomsType => {
     const user = {
         name: getUser(ws.id)?.name,
         index: getUser(ws.id)?.index,
     }
-    const id = rooms.size + 1; // Date.now();
+    //const id = Date.now();
+    const id = rooms.size + 1;
     const newRoom = {
         roomId: id,
         roomUsers: [user]
     };
 
-    const wsOfAllUsersInRoom: WebSocketWithId[] = [];
+    const wsOfAllUsersInRoom: WebSocketCustom[] = [];
+    ws.isGameVsPC = false;
     wsOfAllUsersInRoom.push(ws);
 
     const room = {
@@ -44,11 +46,11 @@ export const addRoom = (ws: WebSocketWithId): RoomsType => {
     return newRoom;
 };
 
-export const createGameRoom = (ws: WebSocketWithId) => {
+export const createGameRoom = (ws: WebSocketCustom) => {
     const roomData = addRoom(ws);
     wss.clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
-            sendGameRoomResponse(Commands.UpdateRoom, JSON.stringify([roomData]), client);
+            sendGameResponse(Commands.UpdateRoom, JSON.stringify([roomData]), client);
         }
     });
 }

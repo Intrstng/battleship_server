@@ -1,16 +1,17 @@
 import {game, playersShips, rooms} from '../data/data';
 import {Commands} from '../types/types';
-import {WebSocketWithId} from '../../index';
-import {sendGameRoomResponse} from './responses';
+import {WebSocketCustom} from '../../index';
+import {sendGameResponse} from './responses';
 
-export const initGameplay = (gameID: number, playerIdx: number, ws: WebSocketWithId) => {
+export const initGameplay = (gameID: number, playerIdx: number, ws: WebSocketCustom) => {
     // Wait for connection of second player
     if (game.get(gameID)?.gameCounter < 2) {
-        setTimeout((gameID: number, playerIdx: number, ws: WebSocketWithId) => initGameplay(gameID, playerIdx, ws), 1000);
+        // Pulse
+        setTimeout((gameID: number, playerIdx: number, ws: WebSocketCustom) => initGameplay(gameID, playerIdx, ws), 1000);
     } else {
         const players = rooms.get(gameID)?.users;
         players?.forEach((user) => {
-            sendGameRoomResponse(Commands.StartGame, JSON.stringify({
+            sendGameResponse(Commands.StartGame, JSON.stringify({
                 ships: playersShips.get(user.id),
                 currentPlayerIndex: playerIdx,
             }), user);
@@ -22,7 +23,7 @@ export const initGameplay = (gameID: number, playerIdx: number, ws: WebSocketWit
             gameData && (gameData.idxOfActivePlayer = playerIdx);
             game.set(gameID, gameData);
 
-            sendGameRoomResponse(Commands.Turn, JSON.stringify({
+            sendGameResponse(Commands.Turn, JSON.stringify({
                 currentPlayer: playerIdx,
             }), ws);
         });

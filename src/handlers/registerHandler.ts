@@ -1,10 +1,11 @@
-import { WebSocketWithId } from '../../index';
-import {getUser, isRegistered, addNewUser, unsuccessfulRegistrationResponse } from '../utils/userAccount';
+import {WebSocketCustom} from '../../index';
+import {getUser, isRegistered, addNewUser } from '../utils/userAccount';
 import {getAllGameRooms} from './roomHandler';
 import {Commands} from '../types/types';
+import {unsuccessfulRegistrationResponse} from '../utils/responses';
 
 
-export const registerUser = (type: Commands, data: string, ws: WebSocketWithId) => {
+export const registerUser = (type: Commands, data: string, ws: WebSocketCustom) => {
     const { name, password } = JSON.parse(data);
     if (!getUser(name)) {
         addNewUser(name, password, ws);

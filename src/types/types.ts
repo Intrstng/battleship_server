@@ -1,5 +1,4 @@
-import {WebSocket} from 'ws';
-import {WebSocketWithId} from '../../index';
+import {WebSocketCustom} from '../../index';
 
 export enum StatusCode {
     HTTP_Error = 0,
@@ -36,7 +35,7 @@ export type User = {
 
 export type Room = {
     id: number;
-    users: WebSocketWithId[];
+    users: WebSocketCustom[];
 };
 
 export type RoomUser = {
@@ -62,7 +61,7 @@ export type ResponseDataType = {
 
 export type RoomData = {
     roomId: number
-    roomUsers: WebSocketWithId[]
+    roomUsers: WebSocketCustom[]
 }
 
 enum ShipSizes {

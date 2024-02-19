@@ -15,9 +15,11 @@ export interface Message {
     id: number;
 }
 
-export type WebSocketWithId = WebSocket & {
+export type WebSocketCustom = WebSocket & {
     id: string
     madeAttacks: Set<string>
+    isAlive?: boolean
+    isGameVsPC?: boolean
 };
 
 
@@ -27,8 +29,20 @@ console.log(`Run WebSocket server on PORT: ${WSS_PORT}`);
 
 export const wss = new WebSocketServer({port: WSS_PORT});
 
-wss.on('connection', (ws: WebSocketWithId) => {
+const interval: NodeJS.Timeout = setInterval(function ping() {
+    const clients = wss.clients;
+    clients.forEach((ws: WebSocketCustom) => {
+        if (ws.hasOwnProperty('isAlive') && !ws.isAlive) {
+            ws.isAlive = false;
+            return ws.terminate();
+        }
+        ws.ping();
+    });
+}, 1000);
+
+wss.on('connection', (ws: WebSocketCustom) => {
     console.log('Client connected to WebSocket server');
+    ws.isAlive = true;
     ws.on('error', console.error);
     ws.on('message', (rawData: string) => {
         const message = JSON.parse(rawData.toString()) as Message;
@@ -45,6 +59,7 @@ wss.on('connection', (ws: WebSocketWithId) => {
 
 
 process.on('SIGINT', () => {
+    clearInterval(interval);
     wss.clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
             console.log('Client disconnected from WebSocket server');

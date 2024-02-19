@@ -1,10 +1,10 @@
-import {WebSocketWithId} from '../../index';
+import {WebSocketCustom} from '../../index';
 import {rooms} from '../data/data';
 import {getUser} from '../utils/userAccount';
 import {Commands} from '../types/types';
-import {sendGameRoomResponse} from '../utils/responses';
+import {sendGameResponse} from '../utils/responses';
 
-export const addUsersToRoom = (data: string, ws: WebSocketWithId) => {
+export const addUsersToRoom = (data: string, ws: WebSocketCustom) => {
     const idxRoom = JSON.parse(data).indexRoom;
     const adminOfRoom = rooms.get(idxRoom)?.users[0];
     if (adminOfRoom.id !== ws.id) {
@@ -15,11 +15,11 @@ export const addUsersToRoom = (data: string, ws: WebSocketWithId) => {
         rooms.set(idxRoom, room);
     }
     const currentPlayers = rooms.get(idxRoom).users;
-    currentPlayers.forEach((user: WebSocketWithId) => {
+    currentPlayers.forEach((user: WebSocketCustom) => {
         const player = {
             idGame: idxRoom,
             idPlayer: getUser(user.id).index,
         }
-        sendGameRoomResponse(Commands.CreateGame, JSON.stringify(player), user)
+        sendGameResponse(Commands.CreateGame, JSON.stringify(player), user);
     });
 };

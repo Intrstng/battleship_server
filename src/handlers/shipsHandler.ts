@@ -1,9 +1,9 @@
-import {WebSocketWithId} from '../../index';
+import {WebSocketCustom} from '../../index';
 import {game, playersShips, shipsBoard} from '../data/data';
 import {initGameplay} from '../utils/gameplay';
 import {buildShipsBoard} from '../utils/buildShipBoard';
 
-export const addShips = (data: string, ws: WebSocketWithId) => {
+export const addShips = (data: string, ws: WebSocketCustom) => {
     const { indexPlayer, gameId, ships } = JSON.parse(data);
     let count: number | undefined = game.get(gameId)?.gameCounter;
     count ? count++ : count = 1;

@@ -1,4 +1,4 @@
-import {WebSocketWithId} from '../../index';
+import {WebSocketCustom} from '../../index';
 import {registerUser} from '../handlers/registerHandler';
 import {createGameRoom} from '../handlers/roomHandler';
 import {Commands} from '../types/types';
@@ -6,8 +6,10 @@ import {addUsersToRoom} from '../handlers/newUserHandler';
 import {addShips} from '../handlers/shipsHandler';
 import {makeAttack} from '../handlers/attackHandler';
 import {randomAttackHandler} from '../handlers/randomAttackHandler';
+import {handleFinish} from '../handlers/finishHandler';
+import {startGameVsPC} from '../bot/botHandler';
 
-export type CommandsType = Map<string, (type: Commands, data: string, ws: WebSocketWithId) => void>
+export type CommandsType = Map<string, (type: Commands, data: string, ws: WebSocketCustom) => void>
 
 export const commands: CommandsType = new Map(
     [
@@ -17,21 +19,21 @@ export const commands: CommandsType = new Map(
         [Commands.AddShips, (type, data, ws) => addShips(data, ws)],
         [Commands.Attack, (type, data, ws) => makeAttack(type, data, ws)],
         [Commands.RandomAttack, (type, data, ws) => randomAttackHandler(type, data, ws)],
-        [Commands.SinglePlay, (msg, ws) => console.log('single_play')],
-        [Commands.Turn, (msg, ws) => console.log('turn')],
-        [Commands.Finish, (msg, ws) => console.log('finish')],
+        [Commands.SinglePlay, (type, data, ws) => startGameVsPC(ws)],
+        [Commands.Turn, (type, data, ws) => console.log('turn')],
+        [Commands.Finish, (type, data, ws) => handleFinish(type, data, ws)],
     ]
 )
 
 
-export const handleInput = async(type: Commands, data: string, ws: WebSocketWithId) => {
+export const handleInput = async(type: Commands, data: string, ws: WebSocketCustom) => {
     if (!type) return;
     const handler = commands.get(type);
     try {
         if (handler) await handler(type, data, ws);
         else ws.send(JSON.stringify({ error: true, errorText: 'Your request is invalid.' }));
     } catch (error) {
-        console.log("ERROR 000", error.message);
-        console.log("ERROR 111", error);
+        console.log("ERROR Message: ", error.message);
+        console.log("ERROR Description: ", error);
     }
 }

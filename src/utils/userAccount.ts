@@ -1,11 +1,12 @@
 import {users} from '../data/data';
-import {WebSocketWithId} from '../../index';
+import {WebSocketCustom} from '../../index';
 import {Commands, User} from '../types/types';
+import {successRegistrationResponse} from './responses';
 
 export const getUser = (name: string): User | undefined =>
     users.find((user) => user.name === name);
 
-export const addNewUser = (name: string, password: string, ws: WebSocketWithId) => {
+export const addNewUser = (name: string, password: string, ws: WebSocketCustom) => {
     if (getUser(name)) return;
     const id = users.length + 1;
     const user = {
@@ -18,36 +19,6 @@ export const addNewUser = (name: string, password: string, ws: WebSocketWithId) 
     ws.madeAttacks = new Set();
     successRegistrationResponse(name, '', ws);
 };
-
-export const successRegistrationResponse = (name: string, errMsg: string, ws: WebSocketWithId) => {
-    ws.id = name;
-    ws.send(
-        JSON.stringify({
-            type: Commands.Registration,
-            data: JSON.stringify({
-                name: name,
-                index: getUser(name)?.index,
-                error: false,
-                errorText: errMsg,
-            }),
-        }),
-    );
-}
-
-export const unsuccessfulRegistrationResponse = (name: string, errMsg: string, ws: WebSocketWithId) => {
-    ws.id = '';
-    ws.send(
-        JSON.stringify({
-            type: Commands.Registration,
-            data: JSON.stringify({
-                name: '',
-                id: '',
-                error: true,
-                errorText: errMsg,
-            }),
-        }),
-    );
-}
 
 export const isRegistered = (name: string, password: string): boolean =>
     users.some((user) => user.name === name && user.password === password);
